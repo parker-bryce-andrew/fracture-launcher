@@ -1,34 +1,16 @@
-use std::{
-    env,
-    fs::{File, Permissions},
-    io::Write,
-    os::unix::fs::PermissionsExt,
-    process::Command,
-};
+use std::{env, process::Command};
 
 use notify_rust::Notification;
 
-const APP_PATH: &'static str = "/app/bin/slashshade";
-
-// const BINARY: &[u8] = include_bytes!("../slashshade");
+const APP_PATH: &'static str = "/app/bin/fracture";
 
 fn build_cmd() -> Command {
-    let mut app = Command::new(&APP_PATH);
-    // app.arg("--sandbox")
-    // app
-    //     // .arg(&APP_PATH)
-    //     .args(env::args());
+    let app = Command::new(&APP_PATH);
 
     app
 }
 
 fn main() {
-    // {
-    //     let mut f = File::create("./app").unwrap();
-    //     f.write_all(BINARY).unwrap();
-    //     f.set_permissions(Permissions::from_mode(755)).unwrap();
-    //     f.flush().unwrap();
-    // }
     'process: loop {
         let is_safe_mode = env::var("SAFE_MODE").is_ok();
 
