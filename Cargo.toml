@@ -5,4 +5,4 @@ edition = "2024"
 
 [dependencies]
 ashpd = {version="0.13.10", features=["notification"]}
-smol = "2.0.2"
+tokio = "1.52.1"

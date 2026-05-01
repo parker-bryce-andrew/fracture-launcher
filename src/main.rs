@@ -19,8 +19,16 @@ pub async fn send_ash_notifcation(title: &str, msg: &str) -> ashpd::Result<()> {
     Ok(())
 }
 
-fn send_notifcation(title: &str, msg: &str) -> ashpd::Result<()> {
-    smol::block_on(async { send_ash_notifcation(&title, &msg).await })
+pub fn send_notifcation(title: &str, msg: &str) -> ashpd::Result<()> {
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_io()
+        .build();
+
+    if let Ok(rt) = rt {
+        rt.block_on(async { send_ash_notifcation(&title, &msg).await })
+    } else {
+        Err(ashpd::Error::IO(rt.unwrap_err()))
+    }
 }
 
 fn build_cmd() -> Command {
