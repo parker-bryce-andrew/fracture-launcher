@@ -1,8 +1,27 @@
+use ashpd::desktop::notification::{NotificationProxy, Priority};
 use std::{env, process::Command};
 
-use notify_rust::Notification;
-
 const APP_PATH: &'static str = "/app/bin/fracture";
+const FLATPAK_ID: &str = "systems.fracture.launcher";
+
+pub async fn send_ash_notifcation(title: &str, msg: &str) -> ashpd::Result<()> {
+    let proxy = NotificationProxy::new().await?;
+
+    proxy
+        .add_notification(
+            &FLATPAK_ID,
+            ashpd::desktop::notification::Notification::new(&title)
+                .body(msg)
+                .priority(Priority::Urgent),
+        )
+        .await?;
+
+    Ok(())
+}
+
+fn send_notifcation(title: &str, msg: &str) -> ashpd::Result<()> {
+    smol::block_on(async { send_ash_notifcation(&title, &msg).await })
+}
 
 fn build_cmd() -> Command {
     let app = Command::new(&APP_PATH);
@@ -43,7 +62,7 @@ fn main() {
                 err_msg.replace("\n", "\r\n"),
             );
 
-            let _ = Notification::new().summary("ERROR").body(&err).show();
+            let _ = send_notifcation("ERROR", &err);
             println!("{}", err);
 
             unsafe { env::set_var("SAFE_MODE", "1") };
