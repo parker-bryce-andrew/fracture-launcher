@@ -64,13 +64,13 @@ fn main() {
 
         if !is_safe_mode {
             let err = format!(
-                "THERE WAS A PANIC. Starting again in safe mode. To always start in safe mode, set {} in the environment.{}{}\r\n",
+                "Fracture crashed. Starting again in safe mode. To always start in safe mode, set {} in the environment.{}{}\r\n",
                 "\"SAFE_MODE=1\"",
                 "\r\n\r\n",
                 err_msg.replace("\n", "\r\n"),
             );
 
-            let _ = send_notifcation("ERROR", &err);
+            let _ = send_notifcation("Error", &err);
             println!("{}", err);
 
             unsafe { env::set_var("SAFE_MODE", "1") };
